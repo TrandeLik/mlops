@@ -20,7 +20,7 @@
 
 ### Набор данных
 
-В проекте используется датасет "AI vs Deepfake vs Real", доступный на Hugging Face.
+В проекте используется датасет "OpenDeepfake", доступный на Hugging Face.
 - Ссылка: [prithivMLmods/OpenDeepfake-Preview](https://huggingface.co/datasets/prithivMLmods/OpenDeepfake-Preview)
 - Объем: 20,000 изображений.
 Структура: Данные разделены на обучающую (train) и тестовую (test) выборки.
