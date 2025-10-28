@@ -38,7 +38,7 @@ def train_one_epoch(model, dataloader, optimizer, device, logging_steps):
         progress_bar.set_postfix({"loss": loss.item()})
 
         if (i + 1) % logging_steps == 0:
-            logging.info(f"Step {i+1}/{len(dataloader)}, Loss: {loss.item():.4f}")
+            logging.info(f"Step {i+1}/{len(dataloader)}, Loss: {total_loss / (i + 1):.4f}")
 
     return total_loss / len(dataloader)
 

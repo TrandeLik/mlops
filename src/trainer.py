@@ -3,7 +3,7 @@ import logging
 import torch
 from transformers import PreTrainedModel
 
-from . import data_utils, model_utils, training_utils
+from . import data_processing, model_utils, training_utils
 
 
 class Trainer:
@@ -15,7 +15,18 @@ class Trainer:
         logging.info(f"Pipeline initialized on device: {self.device}")
 
     def _prepare_data(self) -> tuple[dict, dict, dict]:
-        dataloaders, id2label, label2id = data_utils.get_dataloaders(self.config)
+        splits = data_processing.load_and_validate_dataset(self.config)
+        image_processor = model_utils.get_image_processor(self.config)
+        
+        transform_fn = data_processing.create_transform_fn(image_processor, self.config)
+        transformed_splits = data_processing.apply_transform(splits, transform_fn)
+        
+        dataloaders = data_processing.create_dataloaders(transformed_splits, self.config)
+        
+        labels_info = splits['train'].features[self.config['data']['label_column']]
+        id2label = {i: label for i, label in enumerate(labels_info.names)}
+        label2id = {label: i for i, label in enumerate(labels_info.names)}
+
         return dataloaders, id2label, label2id
 
     def train(self):
