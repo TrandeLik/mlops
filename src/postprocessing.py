@@ -17,7 +17,7 @@ def convert_logits_to_predictions(
     for i in range(len(top_probs)):
         pred_class_id = top_indices[i].item()
         predictions.append({
-            "label": id2label[pred_class_id],
+            "label": "IDK",
             "confidence": top_probs[i].item()
         })
     return predictions
