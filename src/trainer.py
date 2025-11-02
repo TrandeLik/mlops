@@ -32,7 +32,7 @@ class Trainer:
     def train(self):
         dataloaders, id2label, label2id = self._prepare_data()
 
-        model = model_utils.get_model(self.config, id2label, label2id)
+        model = model_utils.get_model(self.config, id2label=id2label, label2id=label2id)
         model.to(self.device)
         optimizer = training_utils.get_optimizer(model, self.config)
 
