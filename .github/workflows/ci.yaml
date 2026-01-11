@@ -41,9 +41,8 @@ jobs:
         DVC_REMOTE_USERNAME: ${{ secrets.DVC_REMOTE_USERNAME }}
         DVC_REMOTE_PASSWORD: ${{ secrets.DVC_REMOTE_PASSWORD }}
       run: |
-        dvc remote modify origin --local auth basic
-        dvc remote modify origin --local user ${DVC_REMOTE_USERNAME}
-        dvc remote modify origin --local password ${DVC_REMOTE_PASSWORD}
+        dvc remote modify origin --local access_key_id ${DVC_REMOTE_PASSWORD}
+        dvc remote modify origin --local secret_access_key ${DVC_REMOTE_PASSWORD}
         dvc pull -f
 
     - name: Create TorchServe Model Archive (.mar)
