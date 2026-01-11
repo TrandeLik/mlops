@@ -44,3 +44,16 @@
 export AWS_ACCESS_KEY_ID=<your_dagshub_token>
 export AWS_SECRET_ACCESS_KEY=<your_dagshub_token>
 ```
+
+### Логирование в MLFlow
+
+1. Реализовано логирование в mlflow
+2. Все запуски логируются локально в директорию `mlruns/`. Чтобы просмотреть результаты в веб-интерфейсе, выполните команду в корне проекта: `mlflow ui`
+3. [Также эксперименты можно просматривать в DagsHub](https://dagshub.com/TrandeLik/mlops/experiments)
+4. Для воспроизведения логирования в DagsHub нужно выполнить следующие команды:
+
+```
+export MLFLOW_TRACKING_URI=https://dagshub.com/TrandeLik/mlops.mlflow
+export MLFLOW_TRACKING_USERNAME=<your_username>
+export MLFLOW_TRACKING_PASSWORD=<your_dagshub_token>
+```

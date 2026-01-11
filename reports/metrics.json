@@ -1,5 +1,5 @@
 {
-    "overall_accuracy": 0.88425,
+    "overall_accuracy": 0.884375,
     "class_metrics": {
         "fake": {
             "precision": 0.85,
