@@ -1,0 +1,10 @@
+FROM pytorch/torchserve:latest-cpu
+
+COPY serve/requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+COPY serve/config.properties /home/model-server/config.properties
+COPY model-store/ai-detector.mar /home/model-server/model-store/ai-detector.mar
+
+EXPOSE 8080
+EXPOSE 8081
