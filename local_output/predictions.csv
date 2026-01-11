@@ -1,0 +1,3 @@
+filename,predicted_label,confidence
+1.jpg,fake,0.9708380699157715
+2.jpg,fake,0.561678946018219
