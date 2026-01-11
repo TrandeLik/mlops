@@ -70,3 +70,33 @@ docker run --rm -v "$(pwd)/local_input:/app/input" -v "$(pwd)/local_output:/app/
 ```
 
 5. В `local_output/new_predictions.csv` будут храниться предсказания, формат можно посмотреть в файле-примере (`local_output/predictions.csv`). Отметим, что в целях безопасности у docker-а нет прав на редактирование существующих файлов, поэтому следует либо удалить `predictions.csv`, либо указывать в команде другое название файла
+
+### TorchServe
+
+1.  Создание архива модели (`.mar`): Убедитесь, что у вас есть обученная модель в папке `models/final_model` (выполните `dvc pull`, если нужно). Затем создайте архив:
+
+```
+    # Установите, если требуется
+    pip install torch-model-archiver
+
+    # Создайте директорию для архива
+    mkdir -p model-store
+
+    torch-model-archiver --model-name ai-detector --version 1.0 --handler serve/handler.py --extra-files "models/final_model/" --export-path model-store --force 
+```
+2. Соберите докер образ: `docker build -t ai-detector-serve:v1 .`
+3. Запустите контейнер: `docker run -d --rm -p 8080:8080 -p 8081:8081 --name ai-detector-service ai-detector-serve:v1`
+4. Сервис будет доступен по адресу `http://localhost:8080`
+5. Сервис предоставляет один эндпоинт для предсказаний: `POST /predictions/ai-detector`
+6. Тело запроса состоит из бинарных данных изображения (`.jpg`, `.png` и т.д.).
+7. Пример запроса с `curl`:
+```
+curl -X POST http://localhost:8080/predictions/ai-detector -T /path/to/your/image.jpg
+```
+8. Успешный ответ (`200 OK`) будет содержать JSON-массив с одним объектом:
+```
+  {
+    "label": "AI-generated",
+    "confidence": 0.9912
+  }
+```
