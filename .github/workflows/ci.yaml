@@ -59,4 +59,4 @@ jobs:
           --force
 
     - name: Build TorchServe Docker image
-      run: docker build -t ai-detector-serve:latest . -f Dockerfile.torchserve .
+      run: docker build -t ai-detector-serve:v1  -f Dockerfile.torchserve .
