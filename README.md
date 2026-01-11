@@ -38,8 +38,9 @@
 ### Поддержка DVC
 
 1. Создайте аккаунт на DagsHub.
-2. Подключите удаленное хранилище DagsHub
+2. Настройте аутентификацию. DagsHub использует специальный токен.
 
-`dvc remote add -d origin https://dagshub.com/TrandeLik/mlops.dvc`
-
-3. Настройте аутентификацию. DagsHub использует специальный токен.
+```
+export AWS_ACCESS_KEY_ID=<your_dagshub_token>
+export AWS_SECRET_ACCESS_KEY=<your_dagshub_token>
+```
