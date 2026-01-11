@@ -23,3 +23,41 @@ jobs:
       shell: bash -l {0}
       run: |
         pytest
+  build-serve-app:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Setup Micromamba
+      uses: mamba-org/setup-micromamba@v1
+      with:
+        environment-file: environment-cpu.yaml
+        cache-environment: true
+        
+    - name: Authenticate DVC and Pull Artifacts
+      shell: bash -l {0}
+      env:
+        DVC_REMOTE_USERNAME: ${{ secrets.DVC_REMOTE_USERNAME }}
+        DVC_REMOTE_PASSWORD: ${{ secrets.DVC_REMOTE_PASSWORD }}
+      run: |
+        dvc remote modify origin --local auth basic
+        dvc remote modify origin --local user ${DVC_REMOTE_USERNAME}
+        dvc remote modify origin --local password ${DVC_REMOTE_PASSWORD}
+        dvc pull -f
+
+    - name: Create TorchServe Model Archive (.mar)
+      shell: bash -l {0}
+      run: |
+        pip install torch-model-archiver
+        mkdir -p model-store
+        torch-model-archiver \
+          --model-name ai-detector \
+          --version 1.0 \
+          --handler serve/handler.py \
+          --extra-files "models/final_model/" \
+          --export-path model-store \
+          --force
+
+    - name: Build TorchServe Docker image
+      run: docker build -t ai-detector-serve:latest . -f Dockerfile.torchserve .
