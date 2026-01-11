@@ -5,6 +5,7 @@ from tqdm import tqdm
 from sklearn.metrics import accuracy_score, classification_report
 from transformers import PreTrainedModel
 from torch.utils.data import DataLoader
+import mlflow
 
 
 def get_optimizer(model: PreTrainedModel, config: dict) -> Optimizer:
@@ -20,7 +21,7 @@ def get_optimizer(model: PreTrainedModel, config: dict) -> Optimizer:
     return optimizer
     
 
-def train_one_epoch(model, dataloader, optimizer, device, logging_steps):
+def train_one_epoch(model, dataloader, optimizer, device, logging_steps, epoch):
     model.train()
     total_loss = 0
     
@@ -31,6 +32,7 @@ def train_one_epoch(model, dataloader, optimizer, device, logging_steps):
         optimizer.zero_grad()
         outputs = model(**batch)
         loss = outputs.loss
+        mlflow.log_metric('running_loss', loss, step=epoch * len(dataloader) + i)
         loss.backward()
         optimizer.step()
         
@@ -39,6 +41,7 @@ def train_one_epoch(model, dataloader, optimizer, device, logging_steps):
 
         if (i + 1) % logging_steps == 0:
             logging.info(f"Step {i+1}/{len(dataloader)}, Loss: {total_loss / (i + 1):.4f}")
+            mlflow.log_metric('train_loss', total_loss / (i + 1), step=epoch * len(dataloader) + i)
 
     return total_loss / len(dataloader)
 
@@ -90,11 +93,12 @@ def run_training_loop(model, train_loader, val_loader, optimizer, config: dict, 
         logging.info(f"--- Epoch {epoch + 1}/{num_epochs} ---")
         
         avg_train_loss = train_one_epoch(
-            model, train_loader, optimizer, device, config['training']['logging_steps']
+            model, train_loader, optimizer, device, config['training']['logging_steps'], epoch
         )
         logging.info(f"Average training loss for epoch {epoch + 1}: {avg_train_loss:.4f}")
 
         accuracy, report = evaluate(model, val_loader, device)
+        mlflow.log_metric('val_accuracy', accuracy, step=epoch * len(train_loader))
         logging.info(f"Validation results for epoch {epoch + 1}:")
         logging.info(f"Accuracy: {accuracy:.4f}")
         logging.info("Classification Report:\n" + report)

@@ -21,3 +21,4 @@ dependencies:
   - dvc==3.66.1
   - dvc-s3==3.2.2
   - boto3==1.41.5
+  - torchvision==0.17.2
