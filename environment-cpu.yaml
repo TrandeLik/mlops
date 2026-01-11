@@ -20,3 +20,4 @@ dependencies:
   - pillow==10.3.0
   - pytest==8.4.2
   - pytest-mock==3.15.1
+  - dvc==3.66.1

@@ -2,6 +2,7 @@ data:
   dataset_name: "prithivMLmods/OpenDeepfake-Preview"
   image_column: "image"
   label_column: "label"
+  output_dir: data/prepared
 
 data_split:
   source_split: "train"
@@ -12,7 +13,7 @@ model:
   name: "google/mobilenet_v2_1.0_224"
 
 training:
-  output_dir: "./models/mobilenet_v2_1.0_224"
+  output_dir: models/final_model
   num_train_epochs: 1
   learning_rate: 2.0e-5
   per_device_train_batch_size: 32
@@ -20,6 +21,9 @@ training:
   weight_decay: 0.01
   logging_steps: 50
   device: "cuda:0"
+
+evaluation:
+  metrics_file: reports/metrics.json
 
 run:
   seed: 42

@@ -1,0 +1,29 @@
+stages:
+  prepare:
+    cmd: python prepare.py --config configs/train.yaml
+    deps:
+      - prepare.py
+      - src/data_processing.py
+      - src/utils.py
+    outs:
+      - data/prepared
+
+  train:
+    cmd: python train.py --config configs/train.yaml
+    deps:
+      - train.py
+      - src/
+      - data/prepared
+    outs:
+      - models/final_model
+
+  evaluate:
+    cmd: python evaluate.py --config configs/train.yaml
+    deps:
+      - evaluate.py
+      - src/
+      - models/final_model
+      - data/prepared
+    metrics:
+      - reports/metrics.json:
+          cache: false

@@ -1,0 +1,17 @@
+{
+    "overall_accuracy": 0.88425,
+    "class_metrics": {
+        "fake": {
+            "precision": 0.85,
+            "recall": 0.94,
+            "f1-score": 0.89,
+            "support": 4000
+        },
+        "real": {
+            "precision": 0.93,
+            "recall": 0.83,
+            "f1-score": 0.88,
+            "support": 4000
+        }
+    }
+}
