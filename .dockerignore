@@ -1,0 +1,25 @@
+# Git/DVC/Pyenv/IDE
+.git/
+.gitignore
+.dvc/
+.dvcignore
+.python-version
+.vscode/
+
+# Python кэш и окружения
+**/__pycache__/
+*.pyc
+*.pyo
+.venv/
+env/
+
+# Локальные данные и отчеты
+data/
+reports/
+
+# Локальные результаты экспериментов
+mlruns/
+
+# Тесты и их артефакты
+tests/
+.pytest_cache/

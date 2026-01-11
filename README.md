@@ -57,3 +57,16 @@ export MLFLOW_TRACKING_URI=https://dagshub.com/TrandeLik/mlops.mlflow
 export MLFLOW_TRACKING_USERNAME=<your_username>
 export MLFLOW_TRACKING_PASSWORD=<your_dagshub_token>
 ```
+
+### Docker
+
+1.  Убедитесь, что у вас есть модель. Если вы еще не скачали модель, выполните:  `dvc pull`
+2.  Соберите Docker-образ: `docker build -t ai-detector:v1 .`
+3. Скрипт `src/predict.py` внутри контейнера принимает на вход папку с изображениями и сохраняет предсказания в CSV-файл. Подготовьте входные данные, например, в папке `local_input` (в ней уже находятся примеры) изображений. Создайте папку для выхода (например, `local_output`).
+4. Запустите контейнер для получения предсказаний:
+
+```
+docker run --rm -v "$(pwd)/local_input:/app/input" -v "$(pwd)/local_output:/app/output" ai-detector:v1 --input_path /app/input --output_path /app/output/new_predictions.csv
+```
+
+5. В `local_output/new_predictions.csv` будут храниться предсказания, формат можно посмотреть в файле-примере (`local_output/predictions.csv`). Отметим, что в целях безопасности у docker-а нет прав на редактирование существующих файлов, поэтому следует либо удалить `predictions.csv`, либо указывать в команде другое название файла
